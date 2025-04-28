@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class CategoryController extends Controller
+{
+    public function index()
+    {
+        $categories = Category::orderBy('priority')->get();
+        return CategoryResource::collection($categories);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'priority' => 'nullable|integer',
+            'status' => 'required',
+        ]);
+
+        $data['status'] = filter_var($data['status'], FILTER_VALIDATE_BOOLEAN);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+
+        $category = Category::create($data);
+
+        return response()->json([
+            'message' => 'Category created successfully',
+            'category' => $category,
+        ], 201);
+    }
+
+    public function show($id)
+    {
+        $category = Category::findOrFail($id);
+
+        if ($category->image) {
+            $category->image = asset('storage/' . $category->image);
+        }
+
+        return response()->json($category);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $category = Category::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
+            'priority' => 'nullable|integer',
+            'status' => 'boolean',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+            $data['image'] = $request->file('image')->store('categories', 'public');
+        }
+
+        $category->update($data);
+
+        return response()->json($category);
+    }
+
+    public function destroy($id)
+    {
+        $category = Category::findOrFail($id);
+
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
+
+        $category->delete();
+
+        return response()->json(['message' => 'Category deleted']);
+    }
+}
