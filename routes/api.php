@@ -29,6 +29,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
+
+Route::post('/admin/logout', [AdminController::class, 'logout']);
 Route::post('/signup', [AdminController::class, 'signUp']);
 Route::post('/login', [AdminController::class, 'signIn']);
 
@@ -36,32 +40,35 @@ Route::post('/forgot-password', [AdminController::class, 'sendResetLinkEmail']);
 
 Route::post('/reset-password', [AdminController::class, 'resetPassword']);
 
-Route::get('/users/order-stats', [UserController::class, 'getUsersWithOrderStats']);
-Route::get('/users/{id}/order-stats', [UserController::class, 'getUserOrderStats']);
-Route::get('/brands/{id}/stats', [BrandController::class, 'brandStats']);
-Route::get('/brands/{id}/with-products', [BrandController::class, 'showWithProducts']);
-Route::get('/admin/dashboard', [AdminController::class, 'dashboardStats']);
+Route::middleware(['isAdmin'])->group(function () {
+
+    Route::get('/users/order-stats', [UserController::class, 'getUsersWithOrderStats']);
+    Route::get('/users/{id}/order-stats', [UserController::class, 'getUserOrderStats']);
+    Route::get('/brands/{id}/stats', [BrandController::class, 'brandStats']);
+    Route::get('/brands/{id}/with-products', [BrandController::class, 'showWithProducts']);
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboardStats']);
+
+    Route::apiResource('categories', CategoryController::class);
+
+    Route::apiResource('subcategories', SubcategoryController::class);
+
+    Route::apiResource('products', ProductController::class);
+
+    Route::apiResource('brands', BrandController::class);
+
+    Route::apiResource('posts', PostController::class);
+
+    Route::apiResource('announcements', AnnouncementController::class);
+
+    Route::apiResource('coupons', CouponController::class);
+
+    Route::apiResource('users', UserController::class);
+
+    Route::apiResource('reviews', ReviewController::class);
+
+    Route::apiResource('orders', OrderController::class);
+});
 
 
-
-Route::apiResource('categories', CategoryController::class);
-
-Route::apiResource('subcategories', SubcategoryController::class);
-
-Route::apiResource('products', ProductController::class);
-
-Route::apiResource('brands', BrandController::class);
-
-Route::apiResource('posts', PostController::class);
-
-Route::apiResource('announcements', AnnouncementController::class);
-
-Route::apiResource('coupons', CouponController::class);
-
-Route::apiResource('users', UserController::class);
-
-Route::apiResource('reviews', ReviewController::class);
-
-Route::apiResource('orders', OrderController::class);
 
 

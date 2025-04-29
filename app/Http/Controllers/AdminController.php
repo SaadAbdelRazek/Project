@@ -56,20 +56,29 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
+            'remember_me' => 'sometimes|boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
-            $admin = Auth::guard('admin')->user();
-            return response()->json(['message' => 'Login successful', 'admin' => $admin]);
-        } else {
+        $admin = Admin::where('email', $request->email)->first();
+
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-    }
 
+        // Generate Sanctum token
+        $tokenName = $request->remember_me ? 'admin-token-remembered' : 'admin-token';
+        $token = $admin->createToken($tokenName)->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'admin' => $admin,
+            'token' => $token,
+        ]);
+    }
 
     public function sendResetLinkEmail(Request $request)
     {
@@ -132,6 +141,16 @@ class AdminController extends Controller
         DB::table('admins')->where('email', $reset->email)->update(['reset_token' => null]);
 
         return response()->json(['message' => 'Password reset successful']);
+    }
+
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout successful'
+        ]);
     }
 
 

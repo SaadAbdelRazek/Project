@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 
 class Admin extends Model implements Authenticatable
@@ -14,6 +15,7 @@ class Admin extends Model implements Authenticatable
     use AuthenticatableTrait;
     use CanResetPassword;
     use Notifiable;
+    use HasApiTokens;
 
     protected $guard = 'admin';
 
