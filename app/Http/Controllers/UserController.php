@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -141,5 +143,42 @@ class UserController extends Controller
     }
 
     //------------------------------------------------------------------
+
+    //user orders-----------------------------------------------//-/------
+
+    public function getUserOrders()
+    {
+        $user = Auth::user();
+
+        $orders = Order::with(['products' => function ($query) {
+            $query->select('products.id', 'products.name', 'products.price', 'products.image');
+        }])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($orders);
+    }
+
+
+    //-------------------------------------------------
+    //---------Specific order details------------------------
+
+    public function getUserOrderByNumber($order_id)
+    {
+        $user = Auth::user();
+
+        $order = Order::where('user_id', $user->id)
+            ->where('id', $order_id)
+            ->select('order_num', 'address', 'status', 'expected_delivery')
+            ->first();
+
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        return response()->json($order);
+    }
+
 
 }

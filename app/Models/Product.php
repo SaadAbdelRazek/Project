@@ -12,7 +12,7 @@ class Product extends Model
     protected $fillable = [
         'name', 'image', 'description', 'price',
         'width', 'height', 'length', 'num_in_stock',
-        'status', 'priority', 'category_id', 'sub_category_id', 'brand_id', 'acceptance_status'
+        'status', 'priority', 'category_id', 'sub_category_id', 'brand_id', 'acceptance_status','is_in_super_deals','is_in_mega_deals','sale'
     ];
 
     public function category()
@@ -32,7 +32,10 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_product');
+        return $this->belongsToMany(Order::class, 'order_product')
+            ->withPivot('quantity', 'price')
+            ->withTimestamps();
     }
+
 
 }

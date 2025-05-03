@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordCustom;
+use App\Notifications\VerifyEmailNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -50,6 +52,29 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailNotification());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $url = 'http://localhost:3000/reset-password?token=' . $token . '&email=' . urlencode($this->email); // رابط واجهة React
+
+        $this->notify(new ResetPasswordCustom($url));
+    }
+
+
+    public function packageSubscription()
+    {
+        return $this->hasOne(\App\Models\PackageSubscriber::class);
+    }
+
+    public function brand()
+    {
+        return $this->hasOne(\App\Models\Brand::class);
     }
 
 }

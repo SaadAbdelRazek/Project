@@ -13,4 +13,9 @@ class Coupon extends Model
         'code', 'type', 'discount_value', 'usage_limit',
         'start_date', 'end_date', 'status',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withPivot('usage_count')->withTimestamps();
+    }
 }

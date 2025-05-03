@@ -146,12 +146,21 @@ class AdminController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $admin = auth('sanctum')->user();
+
+        if ($admin && $admin->currentAccessToken()) {
+            $admin->currentAccessToken()->delete();
+
+            return response()->json([
+                'message' => 'Logged out successfully',
+            ]);
+        }
 
         return response()->json([
-            'message' => 'Logout successful'
-        ]);
+            'message' => 'Unauthenticated.',
+        ], 401);
     }
+
 
 
     //------------------------------------------------------------------
