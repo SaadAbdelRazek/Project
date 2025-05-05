@@ -170,7 +170,7 @@ class UserController extends Controller
 
         $order = Order::where('user_id', $user->id)
             ->where('id', $order_id)
-            ->select('order_num', 'address', 'status', 'expected_delivery')
+            ->select('order_num', 'address', 'status', 'delivery_date')
             ->first();
 
         if (!$order) {

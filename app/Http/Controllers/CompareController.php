@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CompareResource;
-use App\Models\Compare;
+use App\Models\CompareProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,7 +10,7 @@ class CompareController extends Controller
 {
     public function index()
     {
-        $items = Compare::with('product')->where('user_id', Auth::id())->get();
+        $items = CompareProduct::with('product')->where('user_id', Auth::id())->get();
         return CompareResource::collection($items);
     }
 
@@ -21,13 +21,13 @@ class CompareController extends Controller
         ]);
 
         $user = Auth::user();
-        $existing = Compare::where('user_id', $user->id)->count();
+        $existing = CompareProduct::where('user_id', $user->id)->count();
 
         if ($existing >= 4) {
             return response()->json(['message' => 'You can only compare up to 4 products'], 422);
         }
 
-        $exists = Compare::where('user_id', $user->id)
+        $exists = CompareProduct::where('user_id', $user->id)
             ->where('product_id', $request->product_id)
             ->exists();
 
@@ -35,7 +35,7 @@ class CompareController extends Controller
             return response()->json(['message' => 'Product already in comparison'], 422);
         }
 
-        $compare = Compare::create([
+        $compare = CompareProduct::create([
             'user_id' => $user->id,
             'product_id' => $request->product_id,
         ]);
@@ -45,7 +45,7 @@ class CompareController extends Controller
 
     public function destroy($id)
     {
-        $compare = Compare::where('id', $id)->where('user_id', Auth::id())->first();
+        $compare = CompareProduct::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$compare) {
             return response()->json(['message' => 'Item not found'], 404);
@@ -58,7 +58,7 @@ class CompareController extends Controller
 
     public function clear()
     {
-        Compare::where('user_id', Auth::id())->delete();
+        CompareProduct::where('user_id', Auth::id())->delete();
         return response()->json(['message' => 'Comparison list cleared']);
     }
 }

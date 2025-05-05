@@ -76,12 +76,22 @@ Route::middleware(['isAdmin'])->group(function () {
 
     Route::apiResource('coupons', CouponController::class);
 
+    Route::apiResource('sales', SaleController::class);
+
+    Route::apiResource('inspirations', InspirationController::class)->only(['store', 'destroy']);
+
+    Route::apiResource('packages', PackageController::class)->only(['store', 'destroy', 'update']);
+
     Route::apiResource('users', UserController::class);
 
     Route::apiResource('reviews', ReviewController::class);
 
     Route::apiResource('orders', OrderController::class);
 });
+
+Route::apiResource('inspirations', InspirationController::class)->only(['index']);
+
+Route::apiResource('packages', PackageController::class)->only(['index']);
 
 //------------------------User----------------------------------------
 
@@ -121,6 +131,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/favourites', [FavouriteController::class, 'store']);
     Route::delete('/favourites/{id}', [FavouriteController::class, 'destroy']);
 
+    //--------------------------DONE----------------------------------------------------------------------
 
     Route::get('/compare', [CompareController::class, 'index']);
     Route::post('/compare', [CompareController::class, 'store']);
@@ -130,29 +141,33 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/vendor/add-product', [VendorController::class, 'addProduct']);
 
 });
+//--------------------------DONE----------------------------------------------------------------------
 
-Route::apiResource('sales', SaleController::class);
 
-Route::apiResource('inspirations', InspirationController::class)->only(['index', 'store', 'destroy']);
 
 Route::get('/home', [HomeController::class, 'index']);
 
 Route::get('/esaltare/categories', [CategoryPageController::class, 'allCategories']);
 Route::get('/esaltare/categories/{id}/products', [CategoryPageController::class, 'productsByCategory']);
+//--------------------------DONE----------------------------------------------------------------------
+
+
 
 Route::middleware('auth:sanctum')->get('/checkout', [CheckoutController::class, 'checkout']);
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/products/{id}/photos', [ProductPhotoController::class, 'index']);
     Route::post('/products/photos', [ProductPhotoController::class, 'store']);
     Route::delete('/products/photos/{id}', [ProductPhotoController::class, 'destroy']);
 });
+Route::get('/products/{id}/photos', [ProductPhotoController::class, 'index']);
+
 
 Route::get('/view/products/{id}', [HomeController::class, 'show']);
 Route::get('products/{id}/similar', [HomeController::class, 'similarProducts']);
 
-Route::apiResource('packages', PackageController::class);
+//--------------------------DONE----------------------------------------------------------------------
+
 
 
 Route::middleware('auth:sanctum')->get('/vendor/profile', [VendorController::class, 'getAuthenticatedVendorWithBrand']);
@@ -163,7 +178,7 @@ Route::middleware('auth:sanctum')->get('/vendor/orders', [VendorController::clas
 
 Route::middleware('auth:sanctum')->get('/user/orders', [UserController::class, 'getUserOrders']);
 
-Route::middleware('auth:sanctum')->get('/orders/{order_id}', [OrderController::class, 'getUserOrderByNumber']);
+Route::middleware('auth:sanctum')->get('/user/orders/{order_id}', [UserController::class, 'getUserOrderByNumber']);
 
 
 //---------------search-------------------------------

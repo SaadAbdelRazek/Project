@@ -20,7 +20,7 @@ class CartProductController extends Controller
     {
         $cart = CartProduct::updateOrCreate(
             ['user_id' => Auth::id(), 'product_id' => $request->product_id],
-            ['quantity' => $request->quantity ?? 1]
+            ['quantity' => $request->quantity ?? 1],
         );
 
         return new CartProductResource($cart);

@@ -23,13 +23,18 @@ class HomeController extends Controller
             'categories' => CategoryResource::collection(Category::all()),
             'announcements' => AnnouncementResource::collection(Announcement::all()),
             'posts' => PostResource::collection(Post::all()),
-            'latest_post' => new PostResource(Post::latest()->first()),
-            'latest_coupon' => new CouponResource(Coupon::latest()->first()),
+            'latest_post' => optional(Post::latest()->first(), fn ($post) => new PostResource($post)),
+            'latest_coupon' => optional(Coupon::latest()->first(), fn ($coupon) => new CouponResource($coupon)),
             'super_deals' => ProductResource::collection(Product::where('is_in_super_deals', true)->get()),
             'mega_deals' => ProductResource::collection(Product::where('is_in_mega_deals', true)->get()),
             'on_sale' => ProductResource::collection(Product::whereIn('id', Sale::pluck('product_id'))->get()),
-            'inspirations' => InspirationResource::collection(Inspiration::latest()->take(4)->get()),
-            'new_arrivals' => ProductResource::collection(Product::latest()->take(10)->get()),
+            'inspirations' => Inspiration::latest()->take(4)->get()->isNotEmpty()
+                ? InspirationResource::collection(Inspiration::latest()->take(4)->get())
+                : [],
+
+            'new_arrivals' => Product::latest()->take(10)->get()->isNotEmpty()
+                ? ProductResource::collection(Product::latest()->take(10)->get())
+                : [],
         ]);
     }
 
