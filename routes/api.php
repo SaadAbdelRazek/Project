@@ -82,7 +82,7 @@ Route::middleware(['isAdmin'])->group(function () {
 
     Route::apiResource('packages', PackageController::class)->only(['store', 'destroy', 'update']);
 
-    Route::apiResource('users', UserController::class);
+    Route::apiResource('users', UserController::class)->only(['index', 'destroy']);
 
     Route::apiResource('reviews', ReviewController::class);
 
@@ -92,6 +92,7 @@ Route::middleware(['isAdmin'])->group(function () {
 Route::apiResource('inspirations', InspirationController::class)->only(['index']);
 
 Route::apiResource('packages', PackageController::class)->only(['index']);
+
 
 //------------------------User----------------------------------------
 
@@ -112,6 +113,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::apiResource('users', UserController::class)->only(['update', 'show']);
+
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
