@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeatureController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/generate-image', [FeatureController::class, 'showForm'])->name('image.form');
+Route::post('/generate-image', [FeatureController::class, 'generateImage'])->name('generate.image');
