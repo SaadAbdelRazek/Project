@@ -3,27 +3,25 @@
 namespace App\Notifications;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class ResetPasswordCustom extends Notification
 {
-    public $url;
+    public $token;
 
-    public function __construct($url)
+    public function __construct($token)
     {
-        $this->url = $url;
-    }
-
-    public function via($notifiable)
-    {
-        return ['mail'];
+        $this->token = $token;
     }
 
     public function toMail($notifiable)
     {
+        $frontendUrl = "http://localhost:5173/setnewpassword/{$this->token}?email={$notifiable->email}";
+
         return (new MailMessage)
-            ->subject('Reset Your Password')
-            ->line('We received a request to reset your password.')
-            ->action('Reset Password', $this->url)
+            ->subject('Reset Password Notification')
+            ->line('Click the button below to reset your password:')
+            ->action('Reset Password', $frontendUrl)
             ->line('If you did not request a password reset, no further action is required.');
     }
 }

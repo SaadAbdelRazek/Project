@@ -61,9 +61,7 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $url = 'http://localhost:3000/reset-password?token=' . $token . '&email=' . urlencode($this->email); // رابط واجهة React
-
-        $this->notify(new ResetPasswordCustom($url));
+        $this->notify(new ResetPasswordCustom($token));
     }
 
 
