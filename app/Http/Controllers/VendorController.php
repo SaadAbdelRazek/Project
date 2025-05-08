@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,11 +14,13 @@ class VendorController extends Controller
     public function addProduct(Request $request)
     {
         $request->validate([
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'images' => 'required|array|min:1',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
             'price' => 'required|numeric|min:0',
+            'num_in_stock' => 'required|integer|min:0',
             'description' => 'nullable|string',
         ]);
 
@@ -29,22 +32,31 @@ class VendorController extends Controller
             return response()->json(['message' => 'This user is not a brand owner'], 403);
         }
 
-        // Handle file upload
-        $photoPath = $request->file('photo')->store('products', 'public');
+        $images = $request->file('images');
+
+        $mainPhoto = $images[0]->store('products', 'public');
 
         $product = Product::create([
-            'photo' => basename($photoPath),
+            'photo' => basename($mainPhoto),
             'name' => $request->name,
             'category_id' => $request->category_id,
             'sub_category_id' => $request->subcategory_id,
             'price' => $request->price,
+            'num_in_stock' => $request->num_in_stock,
             'description' => $request->description,
             'brand_id' => $brand->id,
         ]);
 
+        foreach (array_slice($images, 1) as $image) {
+            ProductPhoto::create([
+                'product_id' => $product->id,
+                'photo' => $image->store('product_photos', 'public'),
+            ]);
+        }
+
         return response()->json([
             'message' => 'Product created successfully',
-            'product' => $product
+            'product' => $product->load('photos'),
         ], 201);
     }
 

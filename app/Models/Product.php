@@ -37,5 +37,11 @@ class Product extends Model
             ->withTimestamps();
     }
 
+    public function photos()
+    {
+        return $this->hasMany(ProductPhoto::class);
+    }
+
+
 
 }
