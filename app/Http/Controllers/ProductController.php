@@ -70,7 +70,7 @@ class ProductController extends Controller
             'height'          => 'nullable|numeric',
             'length'          => 'nullable|numeric',
             'num_in_stock'    => 'sometimes|integer',
-            'status'          => 'sometimes|in:enabled,disabled',
+            'status'          => 'sometimes|in:1,0',
             'priority'        => 'sometimes|integer',
             'category_id'     => 'sometimes|exists:categories,id',
             'sub_category_id' => 'sometimes|exists:subcategories,id',
