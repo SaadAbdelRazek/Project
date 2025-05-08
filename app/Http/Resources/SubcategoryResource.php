@@ -21,6 +21,7 @@ class SubcategoryResource extends JsonResource
             'description' => $this->description,
             'priority'    => $this->priority,
             'status'      => $this->status,
+            'created_at'  => $this->created_at,
             'category_id' => $this->category_id,
             'category'    => [
                 'id'   => $this->category?->id,
