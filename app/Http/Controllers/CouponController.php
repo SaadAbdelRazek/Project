@@ -22,7 +22,7 @@ class CouponController extends Controller
             'usage_limit'    => 'nullable|integer|min:1',
             'start_date'     => 'nullable|date',
             'end_date'       => 'nullable|date|after_or_equal:start_date',
-            'status'         => 'required|in:enabled,disabled',
+            'status'      => 'required|in:1,0',
         ]);
 
         $coupon = Coupon::create($data);

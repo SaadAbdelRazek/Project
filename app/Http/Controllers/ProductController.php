@@ -27,7 +27,7 @@ class ProductController extends Controller
             'height'          => 'nullable|numeric',
             'length'          => 'nullable|numeric',
             'num_in_stock'    => 'required|integer',
-            'status'          => 'required|in:enabled,disabled',
+            'status'      => 'required|in:1,0',
             'priority'        => 'required|integer',
             'category_id'     => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:subcategories,id',

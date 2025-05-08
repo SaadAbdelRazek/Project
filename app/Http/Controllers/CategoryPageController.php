@@ -12,17 +12,24 @@ class CategoryPageController extends Controller
 {
     public function allCategories()
     {
-        return CategoryResource::collection(Category::all());
+        return CategoryResource::collection(
+            Category::where('status', 1)->get()
+        );
     }
+
 
     public function productsByCategory($id)
     {
-        $category = Category::findOrFail($id);
-        $products = Product::where('category_id', $id)->get();
+        $category = Category::where('id', $id)->where('status', 1)->firstOrFail();
+
+        $products = Product::where('category_id', $id)
+            ->where('status', 1)
+            ->get();
 
         return response()->json([
             'category' => new CategoryResource($category),
             'products' => ProductResource::collection($products),
         ]);
     }
+
 }

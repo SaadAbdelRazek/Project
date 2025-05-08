@@ -24,7 +24,7 @@ class SubcategoryController extends Controller
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'priority'    => 'required|integer',
-            'status'      => 'required|in:Active,Inactive',
+            'status'      => 'required|in:1,0',
         ]);
 
         if ($request->hasFile('image')) {

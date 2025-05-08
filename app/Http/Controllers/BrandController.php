@@ -23,7 +23,7 @@ class BrandController extends Controller
             'user_id' => 'required|exists:users,id',
             'description' => 'nullable|string',
             'priority'    => 'required|integer',
-            'status'      => 'required|in:enabled,disabled',
+            'status'      => 'required|in:1,0',
         ]);
 
         if ($request->hasFile('image')) {

@@ -20,7 +20,7 @@ class AnnouncementController extends Controller
             'title'      => 'required|string|max:255',
             'image'      => 'nullable|image',
             'percentage' => 'required|integer|min:0|max:100',
-            'status'     => 'required|in:enabled,disabled',
+            'status'      => 'required|in:1,0',
         ]);
 
         if ($request->hasFile('image')) {
