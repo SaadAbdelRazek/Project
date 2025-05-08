@@ -14,6 +14,11 @@ class ResetPasswordCustom extends Notification
         $this->token = $token;
     }
 
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
     public function toMail($notifiable)
     {
         $frontendUrl = "http://localhost:5173/setnewpassword/{$this->token}?email={$notifiable->email}";
