@@ -11,21 +11,26 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InspirationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PersonalityController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPhotoController;
+use App\Http\Controllers\QuizPersonalityController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use GeminiAPI\Laravel\Facades\Gemini;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,7 +92,24 @@ Route::middleware(['isAdmin'])->group(function () {
     Route::apiResource('reviews', ReviewController::class);
 
     Route::apiResource('orders', OrderController::class);
+
+    Route::post('/questions', [PersonalityController::class, 'storeQuestion']);
+
+    Route::put('/questions/{questionId}', [PersonalityController::class, 'updateQuestion']);
+
+    Route::delete('/questions/{questionId}', [PersonalityController::class, 'deleteQuestion']);
+
+
+    Route::get('personalities', [QuizPersonalityController::class, 'index']);
+    Route::post('personalities', [QuizPersonalityController::class, 'store']);
+    Route::put('personalities/{id}', [QuizPersonalityController::class, 'update']);
+    Route::delete('personalities/{id}', [QuizPersonalityController::class, 'destroy']);
+
 });
+
+Route::get('personalities/{id}', [QuizPersonalityController::class, 'show']);
+
+Route::get('/questions', [PersonalityController::class, 'getAllQuestions']);
 
 Route::apiResource('inspirations', InspirationController::class)->only(['index']);
 
@@ -190,3 +212,6 @@ Route::post('/search/all', [SearchController::class, 'searchAll']);
 
 Route::get('/esaltare/products/filter', [SearchController::class, 'filterProducts']);
 //--------------------------------------------------------------------------------
+
+Route::post('/gemini-response', [GeminiController::class, 'sendMessage']);
+

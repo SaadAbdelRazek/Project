@@ -14,6 +14,20 @@ class ProductUserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'          => $this->id,
+            'name'        => $this->name,
+            'image'       => $this->image ? asset('storage/' . $this->image) : null,
+            'description' => $this->description,
+            'price'       => $this->price,
+            'sale'        => $this->sale,
+            'width'           => $this->width,
+            'height'          => $this->height,
+            'length'          => $this->length,
+            'num_in_stock'    => $this->num_in_stock,
+            'brand'       => new BrandResource($this->whenLoaded('brand')),
+            'category'    => new CategoryResource($this->whenLoaded('category')),
+            'photos'      => ProductPhotoResource::collection($this->whenLoaded('photos')),
+        ];
     }
 }

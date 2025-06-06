@@ -46,7 +46,7 @@ class CouponController extends Controller
             'usage_limit'    => 'nullable|integer|min:1',
             'start_date'     => 'nullable|date',
             'end_date'       => 'nullable|date|after_or_equal:start_date',
-            'status'         => 'sometimes|in:enabled,disabled',
+            'status'         => 'sometimes|in:0,1',
         ]);
 
         $coupon->update($data);

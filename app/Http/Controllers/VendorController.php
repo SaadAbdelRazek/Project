@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductUserResource;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Product;
@@ -56,7 +58,7 @@ class VendorController extends Controller
 
         return response()->json([
             'message' => 'Product created successfully',
-            'product' => $product->load('photos'),
+            'product' => new ProductUserResource($product),
         ], 201);
     }
 

@@ -45,7 +45,7 @@ class AnnouncementController extends Controller
             'title'      => 'sometimes|string|max:255',
             'image'      => 'nullable|image',
             'percentage' => 'sometimes|integer|min:0|max:100',
-            'status'     => 'sometimes|in:enabled,disabled',
+            'status'     => 'sometimes|in:0,1',
         ]);
 
         if ($request->hasFile('image')) {

@@ -47,7 +47,7 @@ class PostController extends Controller
             'image'       => 'nullable|image',
             'description' => 'nullable|string',
             'priority'    => 'sometimes|integer',
-            'status'      => 'sometimes|in:enabled,disabled',
+            'status'      => 'sometimes|in:1,0',
         ]);
 
         if ($request->hasFile('image')) {
