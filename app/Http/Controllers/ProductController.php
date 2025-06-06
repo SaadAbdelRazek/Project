@@ -63,7 +63,8 @@ class ProductController extends Controller
 
         $data = $request->validate([
             'name'            => 'sometimes|string|max:255',
-            'image'           => 'nullable|image',
+            'images'          => 'nullable|array',
+            'images.*'        => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description'     => 'nullable|string',
             'price'           => 'sometimes|numeric',
             'width'           => 'nullable|numeric',
@@ -76,17 +77,29 @@ class ProductController extends Controller
             'sub_category_id' => 'sometimes|exists:subcategories,id',
         ]);
 
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $data['image'] = $request->file('image')->store('products', 'public');
+
+            $firstImagePath = $images[0]->store('products', 'public');
+            $data['image'] = $firstImagePath;
+
+            foreach (array_slice($images, 1) as $image) {
+                $path = $image->store('product_photos', 'public');
+                $product->photos()->create([
+                    'image' => $path,
+                ]);
+            }
         }
 
         $product->update($data);
 
-        return new ProductResource($product->load(['category', 'subcategory']));
+        return new ProductResource($product->load(['category', 'subcategory', 'photos']));
     }
+
 
     public function destroy($id)
     {
