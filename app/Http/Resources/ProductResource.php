@@ -31,6 +31,9 @@ class ProductResource extends JsonResource
             'brand'           => new BrandResource($this->whenLoaded('brand')),
             'category'        => new CategoryResource($this->whenLoaded('category')),
             'subcategory'     => new SubcategoryResource($this->whenLoaded('subcategory')),
+            'photos' => $this->photos->map(function ($photo) {
+                return asset('storage/' . $photo->photo);
+            }),
         ];
     }
 }

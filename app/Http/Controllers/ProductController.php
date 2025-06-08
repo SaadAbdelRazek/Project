@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index()
     {
         return ProductResource::collection(
-            Product::with(['category', 'subcategory'])->latest()->get()
+            Product::with(['brand','category', 'subcategory','photos'])->latest()->get()
         );
     }
 

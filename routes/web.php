@@ -21,3 +21,8 @@ Route::get('/', function () {
 
 Route::get('/generate-image', [FeatureController::class, 'showForm'])->name('image.form');
 Route::post('/generate-image', [FeatureController::class, 'generateImage'])->name('generate.image');
+
+
+Route::get('/test-key', function () {
+    dd(config('services.gemini.api_key'));
+});

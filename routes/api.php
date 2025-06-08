@@ -213,5 +213,4 @@ Route::post('/search/all', [SearchController::class, 'searchAll']);
 Route::get('/esaltare/products/filter', [SearchController::class, 'filterProducts']);
 //--------------------------------------------------------------------------------
 
-Route::post('/gemini-response', [GeminiController::class, 'sendMessage']);
-
+Route::post('/gemini-response', [GeminiController::class, 'handlePrompt']);
