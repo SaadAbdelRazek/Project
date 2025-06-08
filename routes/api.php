@@ -7,6 +7,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryPageController;
+use App\Http\Controllers\ChatHistoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\CouponController;
@@ -105,6 +106,9 @@ Route::middleware(['isAdmin'])->group(function () {
     Route::put('personalities/{id}', [QuizPersonalityController::class, 'update']);
     Route::delete('personalities/{id}', [QuizPersonalityController::class, 'destroy']);
 
+    Route::get('/admin/customers', [AdminController::class, 'getAllUsersWithUserRole']);
+    Route::get('/admin/vendors', [AdminController::class, 'getAllUsersWithVendorRole']);
+
 });
 
 Route::get('personalities/{id}', [QuizPersonalityController::class, 'show']);
@@ -189,7 +193,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('/products/{id}/photos', [ProductPhotoController::class, 'index']);
 
 
-Route::get('/view/products/{id}', [HomeController::class, 'show']);
+Route::get('/view/products/{id}', [HomeController::class, 'show'])->name('productDetails');
 Route::get('products/{id}/similar', [HomeController::class, 'similarProducts']);
 
 //--------------------------DONE----------------------------------------------------------------------
@@ -214,3 +218,8 @@ Route::get('/esaltare/products/filter', [SearchController::class, 'filterProduct
 //--------------------------------------------------------------------------------
 
 Route::post('/gemini-response', [GeminiController::class, 'handlePrompt']);
+
+
+//-------------
+Route::middleware('auth:sanctum')->get('/chat-history', [ChatHistoryController::class, 'index']);
+//-------------

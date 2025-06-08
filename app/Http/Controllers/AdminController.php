@@ -194,6 +194,26 @@ class AdminController extends Controller
         ]);
     }
 
+    public function getAllUsersWithUserRole()
+    {
+        $users = User::where('role', 'user')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'customers' => $users,
+        ]);
+    }
+
+    public function getAllUsersWithVendorRole()
+    {
+        $users = User::where('role', 'vendor')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'vendors' => $users,
+        ]);
+    }
+
 }
 
 
