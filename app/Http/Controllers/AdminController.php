@@ -206,13 +206,42 @@ class AdminController extends Controller
 
     public function getAllUsersWithVendorRole()
     {
-        $users = User::where('role', 'vendor')->get();
+        $vendors = User::where('role', 'vendor')
+            ->with(['brand.products.orders'])
+            ->get()
+            ->map(function ($vendor) {
+                $brand = $vendor->brand;
+
+                $productCount = $brand?->products?->count() ?? 0;
+
+                $totalPaid = 0;
+
+                if ($brand && $brand->products) {
+                    foreach ($brand->products as $product) {
+                        foreach ($product->orders as $order) {
+                            $totalPaid += $order->pivot->price * $order->pivot->quantity;
+                        }
+                    }
+                }
+
+                return [
+                    'id' => $vendor->id,
+                    'name' => $vendor->name,
+                    'email' => $vendor->email,
+                    'phone' => $vendor->phone,
+                    'brand_name' => $brand?->name ?? null,
+                    'product_count' => $productCount,
+                    'total_paid' => $totalPaid,
+                    'registered_at' => $vendor->created_at,
+                ];
+            });
 
         return response()->json([
             'status' => 'success',
-            'vendors' => $users,
+            'vendors' => $vendors,
         ]);
     }
+
 
 }
 

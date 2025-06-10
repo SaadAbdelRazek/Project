@@ -19,21 +19,21 @@ class HomeController extends Controller
     public function index(): JsonResponse
     {
         return response()->json([
-            'brands' => BrandResource::collection(Brand::all()),
-            'categories' => CategoryResource::collection(Category::all()),
-            'announcements' => AnnouncementResource::collection(Announcement::all()),
-            'posts' => PostResource::collection(Post::all()),
-            'latest_post' => optional(Post::latest()->first(), fn ($post) => new PostResource($post)),
-            'latest_coupon' => optional(Coupon::latest()->first(), fn ($coupon) => new CouponResource($coupon)),
-            'super_deals' => ProductResource::collection(Product::where('is_in_super_deals', true)->get()),
-            'mega_deals' => ProductResource::collection(Product::where('is_in_mega_deals', true)->get()),
-            'on_sale' => ProductResource::collection(Product::whereIn('id', Sale::pluck('product_id'))->get()),
+            'brands' => BrandResource::collection(Brand::where('status', 1)->get()),
+            'categories' => CategoryResource::collection(Category::where('status', 1)->get()),
+            'announcements' => AnnouncementResource::collection(Announcement::where('status', 1)->get()),
+            'posts' => PostResource::collection(Post::where('status', 1)->get()),
+            'latest_post' => optional(Post::where('status', 1)->latest()->first(), fn ($post) => new PostResource($post)),
+            'latest_coupon' => optional(Coupon::where('status', 1)->latest()->first(), fn ($coupon) => new CouponResource($coupon)),
+            'super_deals' => ProductResource::collection(Product::where('status', 1)->where('is_in_super_deals', true)->get()),
+            'mega_deals' => ProductResource::collection(Product::where('status', 1)->where('is_in_mega_deals', true)->get()),
+            'on_sale' => ProductResource::collection(Product::where('status', 1)->whereIn('id', Sale::pluck('product_id'))->get()),
             'inspirations' => Inspiration::latest()->take(4)->get()->isNotEmpty()
                 ? InspirationResource::collection(Inspiration::latest()->take(4)->get())
                 : [],
 
-            'new_arrivals' => Product::latest()->take(10)->get()->isNotEmpty()
-                ? ProductResource::collection(Product::latest()->take(10)->get())
+            'new_arrivals' => Product::where('status', 1)->latest()->take(10)->get()->isNotEmpty()
+                ? ProductResource::collection(Product::where('status', 1)->latest()->take(10)->get())
                 : [],
         ]);
     }

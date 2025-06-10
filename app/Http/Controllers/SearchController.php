@@ -21,15 +21,15 @@ class SearchController extends Controller
         $products = Product::where('name', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
             ->orWhereHas('brand', fn($q) => $q->where('name', 'like', "%{$query}%")
-                ->where('status', 'enabled'))
+                ->where('status', 1))
             ->orWhereHas('category', fn($q) => $q->where('name', 'like', "%{$query}%")
                 ->where('status', 1))
             ->orWhere('acceptance_status', 'accepted')
-            ->orWhere('status', 'enabled')->get();
+            ->orWhere('status', 1)->get();
 
         $posts = Post::where('title', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
-            ->where('status', 'enabled')
+            ->where('status', 1)
             ->take(5)->get();
 
         $categories = Category::where('name', 'like', "%{$query}%")
@@ -37,7 +37,7 @@ class SearchController extends Controller
             ->take(5)->get();
 
         $brands = Brand::where('name', 'like', "%{$query}%")
-            ->where('status', 'enabled')
+            ->where('status', 1)
             ->take(5)->get();
 
         return response()->json([
