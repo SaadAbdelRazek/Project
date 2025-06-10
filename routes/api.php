@@ -62,6 +62,8 @@ Route::post('/reset-password', [AdminController::class, 'resetPassword']);
 
 Route::middleware(['isAdmin'])->group(function () {
 
+    Route::put('/products/{id}/acceptance-status', [VendorController::class, 'updateAcceptanceStatus']);
+
     Route::get('/users/order-stats', [UserController::class, 'getUsersWithOrderStats']);
     Route::get('/users/{id}/order-stats', [UserController::class, 'getUserOrderStats']);
     Route::get('/brands/{id}/stats', [BrandController::class, 'brandStats']);
@@ -224,4 +226,6 @@ Route::post('/gemini-response', [GeminiController::class, 'handlePrompt']);
 Route::middleware('auth:sanctum')->get('/chat-history', [ChatHistoryController::class, 'index']);
 //-------------
 Route::middleware('auth:sanctum')->get('/auth/user', [UserController::class, 'getAuthenticatedUserData']);
+//-------------
+Route::get('/vendor-panel', [VendorController::class, 'getProductDetails']);
 //-------------

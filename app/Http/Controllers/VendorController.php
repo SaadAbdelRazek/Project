@@ -132,4 +132,61 @@ class VendorController extends Controller
 
         return response()->json($orders);
     }
+
+    //------------------------------------------------------------
+
+
+    public function getProductDetails()
+    {
+        $products = Product::with(['category', 'subcategory', 'brand.user'])->where('acceptance_status','pending')->get();
+
+        $productDetails = $products->map(function ($product) {
+            return [
+                'name' => $product->name,
+                'description' => $product->description,
+                'num_in_stock' => $product->num_in_stock,
+                'category_name' => $product->category?->name,
+                'sub_category_name' => $product->subCategory?->name,
+                'price' => $product->price,
+                'created_at' => $product->created_at,
+                'acceptance_status' => $product->acceptance_status,
+                'status' => $product->status,
+                'brand_name' => $product->brand?->name,
+                'vendor_name' => $product->brand?->user?->name,
+            ];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'products' => $productDetails,
+        ]);
+    }
+
+    //--------------------------------------------------------------------
+
+    public function updateAcceptanceStatus(Request $request, $id)
+    {
+        $request->validate([
+            'acceptance_status' => 'required|in:pending,accepted,rejected',
+        ]);
+
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found.',
+            ], 404);
+        }
+
+        $product->acceptance_status = $request->acceptance_status;
+        $product->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Acceptance status updated successfully.',
+            'product' => $product,
+        ]);
+    }
+
 }
