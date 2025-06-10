@@ -62,6 +62,7 @@ Route::post('/reset-password', [AdminController::class, 'resetPassword']);
 
 Route::middleware(['isAdmin'])->group(function () {
 
+    Route::get('/vendor-panel', [VendorController::class, 'getProductDetails']);
     Route::put('/products/{id}/acceptance-status', [VendorController::class, 'updateAcceptanceStatus']);
 
     Route::get('/users/order-stats', [UserController::class, 'getUsersWithOrderStats']);
@@ -227,5 +228,4 @@ Route::middleware('auth:sanctum')->get('/chat-history', [ChatHistoryController::
 //-------------
 Route::middleware('auth:sanctum')->get('/auth/user', [UserController::class, 'getAuthenticatedUserData']);
 //-------------
-Route::get('/vendor-panel', [VendorController::class, 'getProductDetails']);
 //-------------
