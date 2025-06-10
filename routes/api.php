@@ -223,3 +223,5 @@ Route::post('/gemini-response', [GeminiController::class, 'handlePrompt']);
 //-------------
 Route::middleware('auth:sanctum')->get('/chat-history', [ChatHistoryController::class, 'index']);
 //-------------
+Route::middleware('auth:sanctum')->get('/auth/user', [UserController::class, 'getAuthenticatedUserData']);
+//-------------

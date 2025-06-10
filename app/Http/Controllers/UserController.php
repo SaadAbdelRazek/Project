@@ -180,5 +180,34 @@ class UserController extends Controller
         return response()->json($order);
     }
 
+    //---------------------------------------------------
+
+
+    public function getAuthenticatedUserData()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not authenticated',
+            ], 401);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'address' => $user->address,
+                'zip_code' => $user->zip_code,
+                'image' => $user->image,
+                'role' => $user->role,
+            ]
+        ]);
+    }
+
+
 
 }
