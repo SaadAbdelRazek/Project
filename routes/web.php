@@ -26,3 +26,12 @@ Route::post('/generate-image', [FeatureController::class, 'generateImage'])->nam
 Route::get('/test-key', function () {
     dd(config('services.gemini.api_key'));
 });
+
+
+Route::get('/payment-success', function () {
+    return view('success');
+})->name('payment.success');
+
+Route::get('/payment-cancel', function () {
+    return view('cancel');
+})->name('payment.cancel');

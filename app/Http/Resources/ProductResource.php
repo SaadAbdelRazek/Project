@@ -28,6 +28,7 @@ class ProductResource extends JsonResource
             'priority'        => $this->priority,
             'sale'            => $this->sale,
             'created_at'       => $this->created_at,
+            'category_id' => $this->category_id,
             'brand'           => new BrandResource($this->whenLoaded('brand')),
             'category'        => new CategoryResource($this->whenLoaded('category')),
             'subcategory'     => new SubcategoryResource($this->whenLoaded('subcategory')),
