@@ -39,7 +39,7 @@ class VendorController extends Controller
         $mainPhoto = $images[0]->store('products', 'public');
 
         $product = Product::create([
-            'image' => basename($mainPhoto),
+            'image' => $mainPhoto,
             'name' => $request->name,
             'category_id' => $request->category_id,
             'sub_category_id' => $request->subcategory_id,
