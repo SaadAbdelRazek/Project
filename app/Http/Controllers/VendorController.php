@@ -39,7 +39,7 @@ class VendorController extends Controller
         $mainPhoto = $images[0]->store('products', 'public');
 
         $product = Product::create([
-            'photo' => basename($mainPhoto),
+            'image' => basename($mainPhoto),
             'name' => $request->name,
             'category_id' => $request->category_id,
             'sub_category_id' => $request->subcategory_id,
@@ -142,7 +142,9 @@ class VendorController extends Controller
 
         $productDetails = $products->map(function ($product) {
             return [
+                'id' => $product->id,
                 'name' => $product->name,
+                'image' => $product->image,
                 'description' => $product->description,
                 'num_in_stock' => $product->num_in_stock,
                 'category_name' => $product->category?->name,
