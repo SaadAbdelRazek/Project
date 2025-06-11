@@ -41,4 +41,11 @@ return [
         'integration_id' => env('PAYMOB_INTEGRATION_ID'),
         'iframe_id' => env('PAYMOB_IFRAME_ID'),
     ],
+
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
+
 ];

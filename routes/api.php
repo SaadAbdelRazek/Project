@@ -17,6 +17,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InspirationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PersonalityController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\QuizPersonalityController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
@@ -228,4 +230,7 @@ Route::middleware('auth:sanctum')->get('/chat-history', [ChatHistoryController::
 //-------------
 Route::middleware('auth:sanctum')->get('/auth/user', [UserController::class, 'getAuthenticatedUserData']);
 //-------------
+Route::middleware('auth:sanctum')->post('/strip/checkout', [PaymentController::class, 'createCheckoutSession']);
+//-------------
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 //-------------
