@@ -4,38 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Stripe\Webhook;
 
 class StripeWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        $payload = $request->getContent();
-        $sigHeader = $request->header('Stripe-Signature');
+        $payload = @file_get_contents('php://input');
+        $sigHeader = $_SERVER['HTTP_STRIPE_SIGNATURE'];
         $endpointSecret = config('services.stripe.webhook_secret');
 
         try {
-            $event = Webhook::constructEvent(
-                $payload, $sigHeader, $endpointSecret
-            );
+            $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
         } catch (\UnexpectedValueException $e) {
-            return response('Invalid payload', 400);
+            // Invalid payload
+            return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            return response('Invalid signature', 400);
+            // Invalid signature
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
 
         if ($event->type === 'checkout.session.completed') {
             $session = $event->data->object;
 
-            $orderId = $session->metadata->order_id;
+            Log::info('Webhook Received', [
+                'event_type' => $event->type,
+                'order_id' => $session->metadata->order_id ?? 'null',
+            ]);
 
-            $order = Order::find($orderId);
-            if ($order) {
-                $order->is_paid = 1;
-                $order->save();
+            $orderId = $session->metadata->order_id ?? null;
+
+            if ($orderId) {
+                $updated=Order::where('id', $orderId)->update(['is_paid' => 1]);
+                Log::info("Order update result: $updated");
             }
         }
 
-        return response('Webhook received', 200);
+
+        return response()->json(['status' => 'success']);
     }
 }

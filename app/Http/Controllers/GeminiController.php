@@ -69,8 +69,10 @@ class GeminiController extends Controller
                 ChatHistory::create([
                     'user_id' => auth()->id(),
                     'user_message' => $userPrompt,
-                    'bot_response' => $productsHtml,
+                    'bot_response' => is_array($productsHtml) ? json_encode($productsHtml) : $productsHtml,
                 ]);
+
+                Log::info('Reply content type:', ['type' => gettype($productsHtml), 'content' => $productsHtml]);
 
                 return response()->json([
                     'reply' => $productsHtml
@@ -82,11 +84,11 @@ class GeminiController extends Controller
                 ChatHistory::create([
                     'user_id' => auth()->id(),
                     'user_message' => $userPrompt,
-                    'bot_response' => $addedHtml,
+                    'bot_response' => is_array($addedHtml) ? json_encode($addedHtml) : $addedHtml,
                 ]);
-
+                Log::info('Reply content type:', ['type' => gettype($addedHtml), 'content' => $addedHtml]);
                 return response()->json([
-                    'reply' => "$addedHtml added to cart successfully!"
+                    'reply' => $addedHtml. "Product added to cart successfully!"
                 ]);
             }
             elseif ($intent === 'Add Product To Favorites') {
@@ -95,11 +97,12 @@ class GeminiController extends Controller
                 ChatHistory::create([
                     'user_id' => auth()->id(),
                     'user_message' => $userPrompt,
-                    'bot_response' => $addedHtml,
+                    'bot_response' => is_array($addedHtml) ? json_encode($addedHtml) : $addedHtml,
                 ]);
+                Log::info('Reply content type:', ['type' => gettype($addedHtml), 'content' => $addedHtml]);
 
                 return response()->json([
-                    'reply' => "$addedHtml added to favorites successfully!"
+                    'reply' => $addedHtml. "Product added to favorites successfully!"
                 ]);
             }
             elseif ($this->isServiceInquiry($userPrompt)) {
@@ -133,7 +136,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
             }
 
             $note = "If my message is a greeting message, you should reply normally.";
-            $geminiReply = $chat->sendMessage(
+            $geminiReply = Gemini::generateText(
                 "Check first if the following message is related to decoration and interior design. ".
                 "If yes, give me a response (Note: Do not mention that my message is related to decoration and interior design every time). ".
                 "If not, say: Sorry, I cannot help you! But $note. ".
@@ -143,7 +146,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
             ChatHistory::create([
                 'user_id' => auth()->id(),
                 'user_message' => $userPrompt,
-                'bot_response' => $geminiReply,
+                'bot_response' => is_array($geminiReply) ? json_encode($geminiReply) : $geminiReply,
             ]);
 
             return response()->json(['reply' => $geminiReply]);
@@ -460,7 +463,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 ],
             ],
         ];
-        $prompt="Our chat history : $this->formattedHistory";
+        $prompt = "Our chat history: " . json_encode($this->formattedHistory);
 
         if ($this->isProductInquiry($userPrompt)) {
             $prompt .= "If the user only asks about a product and does not want to add it to the cart or favorites, you should restructure the prompt similarly to the following examples:\n";

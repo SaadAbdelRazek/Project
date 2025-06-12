@@ -13,7 +13,6 @@ class PaymentController extends Controller
     {
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        // تأكد إنك عندك order_id جاي من الـ frontend
         $order = Order::findOrFail($request->order_id);
 
         $session = Session::create([
@@ -21,7 +20,7 @@ class PaymentController extends Controller
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'usd',
-                    'unit_amount' => $request->amount * 100, // بالدولار -> سنت
+                    'unit_amount' => $request->amount * 100,
                     'product_data' => [
                         'name' => 'Order #' . $order->id,
                     ],

@@ -222,7 +222,7 @@ Route::post('/search/all', [SearchController::class, 'searchAll']);
 Route::get('/esaltare/products/filter', [SearchController::class, 'filterProducts']);
 //--------------------------------------------------------------------------------
 
-Route::post('/gemini-response', [GeminiController::class, 'handlePrompt']);
+Route::middleware('auth:sanctum')->post('/gemini-response', [GeminiController::class, 'handlePrompt']);
 
 
 //-------------
