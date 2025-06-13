@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryPageController;
 use App\Http\Controllers\ChatHistoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\GeminiController;
@@ -97,7 +98,6 @@ Route::middleware(['isAdmin'])->group(function () {
 
     Route::apiResource('reviews', ReviewController::class);
 
-    Route::apiResource('orders', OrderController::class);
 
     Route::post('/questions', [PersonalityController::class, 'storeQuestion']);
 
@@ -115,6 +115,8 @@ Route::middleware(['isAdmin'])->group(function () {
     Route::get('/admin/vendors', [AdminController::class, 'getAllUsersWithVendorRole']);
 
 });
+Route::apiResource('orders', OrderController::class);
+
 
 Route::get('personalities/{id}', [QuizPersonalityController::class, 'show']);
 
@@ -234,3 +236,7 @@ Route::middleware('auth:sanctum')->post('/strip/checkout', [PaymentController::c
 //-------------
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 //-------------
+Route::middleware('auth:sanctum')->post('/contact', [ContactController::class, 'store']);
+//------------------
+Route::middleware('auth:sanctum')->get('/admin/contacts', [ContactController::class, 'index']);
+//------------------

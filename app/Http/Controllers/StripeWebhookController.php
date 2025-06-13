@@ -6,41 +6,51 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Webhook;
+use Stripe\Exception\SignatureVerificationException;
+use UnexpectedValueException;
 
 class StripeWebhookController extends Controller
 {
     public function handle(Request $request)
     {
-        $payload = @file_get_contents('php://input');
-        $sigHeader = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $payload = $request->getContent();
+        $sigHeader = $request->header('Stripe-Signature');
         $endpointSecret = config('services.stripe.webhook_secret');
+
+        if (!$sigHeader) {
+            Log::error('Stripe Webhook: Missing Signature Header');
+            return response()->json(['error' => 'Signature header missing'], 400);
+        }
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
-        } catch (\UnexpectedValueException $e) {
-            // Invalid payload
+        } catch (UnexpectedValueException $e) {
+            Log::error('Stripe Webhook: Invalid Payload - ' . $e->getMessage());
             return response()->json(['error' => 'Invalid payload'], 400);
-        } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            // Invalid signature
+        } catch (SignatureVerificationException $e) {
+            Log::error('Stripe Webhook: Invalid Signature - ' . $e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
         if ($event->type === 'checkout.session.completed') {
             $session = $event->data->object;
 
-            Log::info('Webhook Received', [
-                'event_type' => $event->type,
-                'order_id' => $session->metadata->order_id ?? 'null',
+            Log::info('Stripe Webhook: Checkout session completed', [
+                'session_id' => $session->id ?? null,
+                'order_id' => $session->metadata->order_id ?? 'missing',
             ]);
 
             $orderId = $session->metadata->order_id ?? null;
 
             if ($orderId) {
-                $updated=Order::where('id', $orderId)->update(['is_paid' => 1]);
-                Log::info("Order update result: $updated");
+                $updated = Order::where('id', $orderId)->update(['is_paid' => true]);
+                Log::info("Stripe Webhook: Order #{$orderId} update status: " . ($updated ? 'SUCCESS' : 'FAILED'));
+            } else {
+                Log::warning('Stripe Webhook: Missing order_id in metadata.');
             }
+        } else {
+            Log::info("Stripe Webhook: Event {$event->type} received but not handled.");
         }
-
 
         return response()->json(['status' => 'success']);
     }
