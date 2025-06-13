@@ -240,3 +240,4 @@ Route::middleware('auth:sanctum')->post('/contact', [ContactController::class, '
 //------------------
 Route::middleware('auth:sanctum')->get('/admin/contacts', [ContactController::class, 'index']);
 //------------------
+Route::middleware('auth:sanctum')->post('/user/add-review', [ReviewController::class, 'addReview']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ReviewResource;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -56,5 +57,33 @@ class ReviewController extends Controller
         $review = Review::findOrFail($id);
         $review->delete();
         return response()->json(['message' => 'Review deleted successfully']);
+    }
+
+
+    public function addReview(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'title' => 'required|string|max:255',
+            'rate' => 'required|integer|min:1|max:5',
+        ]);
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $review = Review::create([
+            'product_id' => $request->product_id,
+            'user_id' => $user->id,
+            'title' => $request->title,
+            'rate' => $request->rate,
+        ]);
+
+        return response()->json([
+            'message' => 'Review submitted successfully',
+            'review' => $review,
+        ], 201);
     }
 }
