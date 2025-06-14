@@ -190,8 +190,8 @@ Route::get('/esaltare/categories/{id}/products', [CategoryPageController::class,
 
 
 
-Route::middleware('auth:sanctum')->get('/checkout', [CheckoutController::class, 'checkout']);
-
+Route::middleware('auth:sanctum')->get('/checkout/details', [CheckoutController::class, 'getCheckoutDetails']);
+Route::middleware('auth:sanctum')->post('/checkout/apply-coupon', [CheckoutController::class, 'applyCoupon']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/products/photos', [ProductPhotoController::class, 'store']);
@@ -241,3 +241,5 @@ Route::middleware('auth:sanctum')->post('/contact', [ContactController::class, '
 Route::middleware('auth:sanctum')->get('/admin/contacts', [ContactController::class, 'index']);
 //------------------
 Route::middleware('auth:sanctum')->post('/user/add-review', [ReviewController::class, 'addReview']);
+//------------------
+Route::middleware('auth:sanctum')->post('/package/subscribe', [PackageController::class, 'createPackageCheckoutSession']);

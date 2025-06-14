@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Stripe\Webhook;
 use Stripe\Exception\SignatureVerificationException;
@@ -51,6 +53,25 @@ class StripeWebhookController extends Controller
         } else {
             Log::info("Stripe Webhook: Event {$event->type} received but not handled.");
         }
+
+        //------------------------------------------------------------
+        if ($event->type === 'checkout.session.completed') {
+            $session = $event->data->object;
+
+            $userId = $session->metadata->user_id;
+            $packageId = $session->metadata->package_id;
+
+            $startDate = now();
+            $endDate = Carbon::now()->addMonth();
+
+
+            DB::table('package_subscribers')->updateOrInsert(
+                ['user_id' => $userId, 'package_id' => $packageId],
+                ['start_date' => $startDate, 'end_date' => $endDate]
+            );
+            DB::table('users')->where('id', $userId)->update(['role' => 'vendor']);
+        }
+        //------------------------------------------------------------------
 
         return response()->json(['status' => 'success']);
     }
