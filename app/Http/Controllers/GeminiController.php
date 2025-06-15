@@ -88,7 +88,7 @@ class GeminiController extends Controller
                 ]);
                 Log::info('Reply content type:', ['type' => gettype($addedHtml), 'content' => $addedHtml]);
                 return response()->json([
-                    'reply' => $addedHtml. "Product added to cart successfully!"
+                    'reply' => $addedHtml
                 ]);
             }
             elseif ($intent === 'Add Product To Favorites') {
@@ -102,7 +102,7 @@ class GeminiController extends Controller
                 Log::info('Reply content type:', ['type' => gettype($addedHtml), 'content' => $addedHtml]);
 
                 return response()->json([
-                    'reply' => $addedHtml. "Product added to favorites successfully!"
+                    'reply' => $addedHtml,
                 ]);
             }
             elseif ($this->isServiceInquiry($userPrompt)) {
@@ -537,8 +537,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 ]
             );
 
-            // بناء البيانات للرد
-            $productData[] = [
+            $productData = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'url' => route('productDetails', $product->id),
@@ -548,12 +547,14 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 'width' => $product->width ?? null,
                 'height' => $product->height ?? null,
                 'price' => number_format($product->price, 2),
+                'message' => '✔️ Product added to cart successfully!'
             ];
+
+
         }
 
-        return response()->json([
-            'products' => $productData
-        ]);
+        return $productData;
+
     }
 
 
@@ -589,8 +590,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 ]
             );
 
-            // تنسيق البيانات للواجهة
-            $productData[] = [
+            $productData = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'url' => route('productDetails', $product->id),
@@ -603,10 +603,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
             ];
         }
 
-        return response()->json([
-            'status' => 'success',
-            'products' => $productData
-        ]);
+        return $productData;
     }
 
     //------------------------------------------------------------------------------------------------
@@ -691,10 +688,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
             ];
         }
 
-        return response()->json([
-            'status' => 'success',
-            'products' => $data,
-        ]);
+        return $data;
     }
 
 

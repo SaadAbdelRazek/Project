@@ -101,6 +101,7 @@ class PaymentController extends Controller
             'cancel_url' => 'http://localhost:5173/cancel',
             'metadata' => [
                 'order_id' => $order->id,
+                'user_id' => $user->id,
             ],
         ]);
 
