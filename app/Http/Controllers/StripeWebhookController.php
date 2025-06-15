@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CartProduct;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,19 @@ class StripeWebhookController extends Controller
 
             if ($orderId && $userId) {
                 $updated = Order::where('id', $orderId)->update(['is_paid' => true]);
+
+                $cartItems = CartProduct::where('user_id', $userId)->get();
+                Log::info($cartItems);
+                foreach ($cartItems as $item) {
+                    OrderProduct::create([
+                        'order_id'   => $orderId,
+                        'product_id' => $item->product_id,
+                        'quantity'   => $item->quantity,
+                        'price'      => $item->price * $item->quantity,
+                    ]);
+                }
                 CartProduct::where('user_id', $userId)->delete();
+
                 Log::info("Stripe Webhook: Order #{$orderId} update status: " . ($updated ? 'SUCCESS' : 'FAILED'));
             } else {
                 Log::warning('Stripe Webhook: Missing order_id in metadata.');

@@ -256,10 +256,10 @@ class AdminController extends Controller
 
         //-----------------------------------------------------------------------
 
-        $topBrandsSellingProducts = DB::table('order_product')
-            ->join('products', 'order_product.product_id', '=', 'products.id')
+        $topBrandsSellingProducts = DB::table('order_products')
+            ->join('products', 'order_products.product_id', '=', 'products.id')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->select('brands.name','brands.image', DB::raw('SUM(order_product.quantity) as total_sold'))
+            ->select('brands.name','brands.image', DB::raw('SUM(order_products.quantity) as total_sold'))
             ->groupBy('brands.id', 'brands.name','brands.image')
             ->orderByDesc('total_sold')
             ->limit(5)
@@ -267,10 +267,10 @@ class AdminController extends Controller
 
         //------------------------------------------------------------------------
 
-        $topBrandsIncome = DB::table('order_product')
-            ->join('products', 'order_product.product_id', '=', 'products.id')
+        $topBrandsIncome = DB::table('order_products')
+            ->join('products', 'order_products.product_id', '=', 'products.id')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->select('brands.name','brands.image', DB::raw('SUM(order_product.quantity * order_product.price) as total_revenue'))
+            ->select('brands.name','brands.image', DB::raw('SUM(order_products.quantity * order_products.price) as total_revenue'))
             ->groupBy('brands.id', 'brands.name','brands.image')
             ->orderByDesc('total_revenue')
             ->limit(5)
@@ -289,9 +289,9 @@ class AdminController extends Controller
 
         //-------------------------------------------------------------------------
 
-        $topFiveSellingProducts = DB::table('order_product')
-            ->join('products', 'order_product.product_id', '=', 'products.id')
-            ->select('products.id', 'products.name', 'products.image', DB::raw('SUM(order_product.quantity) as total_sold'))
+        $topFiveSellingProducts = DB::table('order_products')
+            ->join('products', 'order_products.product_id', '=', 'products.id')
+            ->select('products.id', 'products.name', 'products.image', DB::raw('SUM(order_products.quantity) as total_sold'))
             ->groupBy('products.id', 'products.name', 'products.image')
             ->orderByDesc('total_sold')
             ->limit(5)
