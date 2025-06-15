@@ -80,7 +80,7 @@ Route::middleware(['isAdmin'])->group(function () {
 
     Route::apiResource('products', ProductController::class);
 
-    Route::apiResource('brands', BrandController::class);
+    Route::apiResource('brands', BrandController::class)->only(['index', 'destroy','update']);
 
     Route::apiResource('posts', PostController::class);
 
@@ -117,7 +117,7 @@ Route::middleware(['isAdmin'])->group(function () {
 });
 Route::apiResource('orders', OrderController::class);
 
-
+Route::apiResource('brands', BrandController::class);
 Route::get('personalities/{id}', [QuizPersonalityController::class, 'show']);
 
 Route::get('/questions', [PersonalityController::class, 'getAllQuestions']);
