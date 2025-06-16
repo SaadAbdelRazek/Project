@@ -537,7 +537,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 ]
             );
 
-            $productData = [
+            $productData[] = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'url' => route('productDetails', $product->id),
