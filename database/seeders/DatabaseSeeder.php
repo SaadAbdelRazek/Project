@@ -32,16 +32,12 @@ class DatabaseSeeder extends Seeder
         }
         //----------------------------------------------------------------------
         $subCategories = [
-            ['name' => 'Sofas', 'description' => 'Modern sofas', 'image' => 'sofas.jpg', 'category_id' => 1, 'priority' => 1, 'status' => 1],
-            ['name' => 'Chairs', 'description' => 'Comfortable chairs', 'image' => 'chairs.jpg', 'category_id' => 1, 'priority' => 2, 'status' => 1],
-            ['name' => 'Ceiling Lamps', 'description' => 'Decorative ceiling lamps', 'image' => 'ceiling-lamps.jpg', 'category_id' => 3, 'priority' => 3, 'status' => 1],
-            ['name' => 'Wall Posters', 'description' => 'Artistic posters', 'image' => 'posters.jpg', 'category_id' => 2, 'priority' => 4, 'status' => 1],
-            ['name' => 'Throw Pillows', 'description' => 'Colorful pillows', 'image' => 'pillows.jpg', 'category_id' => 6, 'priority' => 5, 'status' => 1],
-            ['name' => 'Floor Lamps', 'description' => 'Modern floor lamps', 'image' => 'floor-lamps.jpg', 'category_id' => 3, 'priority' => 6, 'status' => 1],
-            ['name' => 'Round Rugs', 'description' => 'Soft round rugs', 'image' => 'round-rugs.jpg', 'category_id' => 4, 'priority' => 7, 'status' => 1],
-            ['name' => 'Glassware', 'description' => 'Elegant glass items', 'image' => 'glassware.jpg', 'category_id' => 10, 'priority' => 8, 'status' => 1],
-            ['name' => 'Organizers', 'description' => 'Storage organizers', 'image' => 'organizers.jpg', 'category_id' => 9, 'priority' => 9, 'status' => 1],
-            ['name' => 'Garden Lights', 'description' => 'LED lights for gardens', 'image' => 'garden-lights.jpg', 'category_id' => 8, 'priority' => 10, 'status' => 1],
+            ['name' => 'The Modern Minimalist', 'description' => 'Modern sofas', 'image' => 'subcategories/1.jpg', 'category_id' => 1, 'priority' => 1, 'status' => 1],
+            ['name' => 'The Artistic (Bohemian / Eclectic)', 'description' => 'Comfortable chairs', 'image' => 'subcategories/2.jpg', 'category_id' => 1, 'priority' => 2, 'status' => 1],
+            ['name' => 'The Industrial', 'description' => 'Decorative ceiling lamps', 'image' => 'subcategories/3.jpg', 'category_id' => 3, 'priority' => 3, 'status' => 1],
+            ['name' => 'The Scandinavian Modern', 'description' => 'Artistic posters', 'image' => 'subcategories/4.jpg', 'category_id' => 2, 'priority' => 4, 'status' => 1],
+            ['name' => 'The Classic Elegance', 'description' => 'Colorful pillows', 'image' => 'subcategories/5.jpg', 'category_id' => 6, 'priority' => 5, 'status' => 1],
+            ['name' => 'The Rustic / Farmhouse', 'description' => 'Modern floor lamps', 'image' => 'subcategories/6.jpg', 'category_id' => 3, 'priority' => 6, 'status' => 1],
         ];
 
         foreach ($subCategories as $sub) {
@@ -49,8 +45,8 @@ class DatabaseSeeder extends Seeder
         }
         //----------------------------------------------------------------------
         $ads = [
-            ['title' => 'Summer Sale', 'image' => 'summer-sale.jpg', 'percentage' => 20, 'status' => 1],
-            ['title' => 'Buy 1 Get 1', 'image' => 'b1g1.jpg', 'percentage' => 50, 'status' => 1],
+            ['title' => 'Summer Sale', 'image' => 'announcements/1.png', 'percentage' => 20, 'status' => 1],
+            ['title' => 'Summer Big Sale', 'image' => 'announcements/2.webp', 'percentage' => 70, 'status' => 1],
         ];
 
         foreach ($ads as $ad) {
@@ -58,8 +54,8 @@ class DatabaseSeeder extends Seeder
         }
         //----------------------------------------------------------------------
             $posts = [
-                ['title' => 'Top 10 Living Room Ideas', 'image' => 'living-room.jpg', 'description' => 'Explore modern living room trends.', 'priority' => 1, 'status' => 1],
-                ['title' => 'Best Lighting for Bedrooms', 'image' => 'bedroom-lighting.jpg', 'description' => 'Set the mood with the right lights.', 'priority' => 2, 'status' => 1],
+                ['title' => 'Top 10 Living Room Ideas', 'image' => 'posts/1.jpg', 'description' => 'Explore modern living room trends.', 'priority' => 1, 'status' => 1],
+                ['title' => 'Best Lighting for Bedrooms', 'image' => 'posts/2.jpg', 'description' => 'Set the mood with the right lights.', 'priority' => 2, 'status' => 1],
             ];
 
             foreach ($posts as $post) {
