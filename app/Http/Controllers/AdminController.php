@@ -251,8 +251,7 @@ class AdminController extends Controller
         //-----------------------------------------------------------------------
 
         $usersWithOrderCount = User::withCount('orders')
-            ->orderByDesc('orders_count')
-            ->get();
+            ->orderByDesc('orders_count')->where('role','user')->limit(5)->get();
 
         //-----------------------------------------------------------------------
 

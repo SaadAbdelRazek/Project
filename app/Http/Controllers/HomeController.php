@@ -83,11 +83,18 @@ class HomeController extends Controller
                 : 0;
         }
 
+        $stats = DB::table('reviews')
+            ->where('product_id', $product->id)
+            ->selectRaw('COUNT(*) as total_reviews, AVG(rate) as average_rating')
+            ->first();
+
         return response()->json([
             'product' => new ProductResource($product),
             'photos' => $photos,
             'reviews' => $reviews,
             'rating_percentages' => $ratingPercentages,
+            'number_of_reviews' => $stats->total_reviews,
+            'average_rating' => round($stats->average_rating,3),
         ]);
     }
 
