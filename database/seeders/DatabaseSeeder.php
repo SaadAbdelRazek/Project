@@ -5,9 +5,12 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Announcement;
 use App\Models\Category;
+use App\Models\Package;
 use App\Models\Post;
 use App\Models\Subcategory;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -63,7 +66,131 @@ class DatabaseSeeder extends Seeder
             }
         //----------------------------------------------------------------------
 
+        $vendors = [
+            [
+                'name' => 'Creative Decor',
+                'email' => 'creative@vendor.com',
+                'phone' => '01012345678',
+                'address' => '12 El Tahrir St, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=1',
+            ],
+            [
+                'name' => 'Modern Touch',
+                'email' => 'moderntouch@vendor.com',
+                'phone' => '01022334455',
+                'address' => '5 Nasr City, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=2',
+            ],
+            [
+                'name' => 'Elegant Spaces',
+                'email' => 'elegant@vendor.com',
+                'phone' => '01098765432',
+                'address' => '45 Maadi, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=3',
+            ],
+            [
+                'name' => 'HomeArt Egypt',
+                'email' => 'homeart@vendor.com',
+                'phone' => '01033445566',
+                'address' => '23 Zamalek, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=4',
+            ],
+            [
+                'name' => 'DécorPro',
+                'email' => 'decorpro@vendor.com',
+                'phone' => '01055667788',
+                'address' => '9 Heliopolis, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=5',
+            ],
+        ];
+
+        $users = [
+            [
+                'name' => 'Saad Abdelrazzek',
+                'email' => 's.a@example.com',
+                'phone' => '01111222333',
+                'address' => '25 Downtown, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=6',
+            ],
+            [
+                'name' => 'Shimaa Gamal',
+                'email' => 's.g@example.com',
+                'phone' => '01122334455',
+                'address' => '8 Mohandessin, Giza',
+                'photo' => 'https://i.pravatar.cc/150?img=7',
+            ],
+            [
+                'name' => 'Baraa Abdelmoezz',
+                'email' => 'b.a@example.com',
+                'phone' => '01133445566',
+                'address' => '60 Abbasia, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=8',
+            ],
+            [
+                'name' => 'Karim Hazem',
+                'email' => 'k.h@example.com',
+                'phone' => '01144556677',
+                'address' => '15 Garden City, Cairo',
+                'photo' => 'https://i.pravatar.cc/150?img=9',
+            ],
+            [
+                'name' => 'Ziad Essam',
+                'email' => 'z.e@example.com',
+                'phone' => '01155667788',
+                'address' => '33 6th of October, Giza',
+                'photo' => 'https://i.pravatar.cc/150?img=10',
+            ],
+        ];
+
+        foreach ($vendors as $vendor) {
+            User::create([
+                'name' => $vendor['name'],
+                'email' => $vendor['email'],
+                'password' => Hash::make('password'),
+                'phone' => $vendor['phone'],
+                'address' => $vendor['address'],
+                'photo' => $vendor['photo'],
+                'role' => 'vendor',
+                'is_active' => 1,
+            ]);
+        }
+
+        foreach ($users as $user) {
+            User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => Hash::make('password'),
+                'phone' => $user['phone'],
+                'address' => $user['address'],
+                'photo' => $user['photo'],
+                'role' => 'user',
+                'is_active' => 1,
+            ]);
+        }
+
         //----------------------------------------------------------------------
+
+        $packages = [
+            [
+                'name' => 'Basic Vendor Plan',
+                'items' => 'إضافة حتى 20 منتج، صفحة تعريفية للبراند، دعم فني عبر البريد',
+                'price' => 49.99,
+            ],
+            [
+                'name' => 'Standard Vendor Plan',
+                'items' => 'إضافة حتى 100 منتج، صفحة براند احترافية، دعم مباشر، تحليل أداء المبيعات',
+                'price' => 99.99,
+            ],
+            [
+                'name' => 'Premium Vendor Plan',
+                'items' => 'إضافة عدد غير محدود من المنتجات، حملات ترويج على المنصة، مدير حساب مخصص، تقارير تفصيلية',
+                'price' => 149.99,
+            ],
+        ];
+
+        foreach ($packages as $package) {
+            Package::create($package);
+        }
 
         //----------------------------------------------------------------------
 
