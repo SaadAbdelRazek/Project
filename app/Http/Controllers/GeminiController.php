@@ -547,7 +547,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 'width' => $product->width ?? null,
                 'height' => $product->height ?? null,
                 'price' => number_format($product->price, 2),
-                'message' => '✔️ Product added to cart successfully!'
+                'message' => 'Product added to cart successfully!'
             ];
 
 
@@ -600,7 +600,7 @@ Easily add products to your cart or favorites through the chatbot or browsing in
                 'width' => $product->width ?? null,
                 'height' => $product->height ?? null,
                 'price' => number_format($product->price, 2),
-                'message' => '✔️ Product added to favorites successfully!'
+                'message' => 'Product added to favorites successfully!'
             ];
         }
 
